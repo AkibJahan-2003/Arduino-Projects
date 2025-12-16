@@ -1,0 +1,101 @@
+#include<Servo.h>
+int trig = 13;
+int echo = 12;
+int distance;
+long time;
+int buzz = 7;
+int motion = 5;
+float temp = A1;
+int lightSensor = A2;
+Servo servo1;
+void setup()
+{
+  pinMode(trig, OUTPUT);
+  pinMode(buzz, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(lightSensor, INPUT);
+  pinMode(temp, INPUT);
+  pinMode(motion, INPUT);
+  servo1.attach(4);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int lightvalue = analogRead(lightSensor);
+  Serial.println(lightvalue);
+  
+  
+  int pir = digitalRead(motion);
+  Serial.println(pir);
+  
+  
+  digitalWrite(trig , LOW);
+  delayMicroseconds(10);
+  digitalWrite(trig , HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig , LOW);
+  
+  time = pulseIn(echo , HIGH);
+  distance = time * 0.034/2;
+  
+  Serial.println("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  int tempValue = analogRead(temp);
+  Serial.println(tempValue);
+  float c = tempValue * (5.0/1023.0) * 100.0;
+  
+  Serial.println("Temperature: ");
+  Serial.print(c);
+  Serial.println("c");
+  
+  
+  // temperature: 
+  if(c < 40){
+  	servo1.write(0);
+    digitalWrite(buzz , LOW);
+  }
+  else{
+    servo1.write(90);
+    digitalWrite(buzz , HIGH);
+    delay(10);
+    digitalWrite(buzz , LOW);
+    delay(10);
+    Serial.println("Very high temperature!Drink Water 1 ltr per day");
+    
+  }
+  
+  //Motion alert:
+  if(pir == HIGH){
+    Serial.println("Someone is here detect by motion sensor!");
+  }
+  else{
+  	digitalWrite(buzz , LOW);
+  }
+  
+  
+  //Theif distance
+  if(distance < 30){
+  	Serial.println("Theif is near!");
+    digitalWrite(buzz, HIGH);
+    delay(10);
+    
+  }
+  else{
+  	Serial.println("You are safe here!");
+    digitalWrite(buzz , LOW);
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+}
