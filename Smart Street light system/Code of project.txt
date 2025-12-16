@@ -1,0 +1,55 @@
+int trig = 13;
+int echo = 12;
+long time;
+int distance ;
+int led = 5;
+int lightSensor = A1;
+void setup()
+{
+  pinMode(led , OUTPUT);
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(lightSensor , INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+    //Ultrasonic Sensor Value
+  digitalWrite(trig , LOW);
+  delayMicroseconds(10);
+  digitalWrite(trig , HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig , LOW);
+  
+  
+  time = pulseIn(echo , HIGH);
+  distance = time * 0.034/2;
+  
+  Serial.println("Distance: ");
+  Serial.print(distance);
+  Serial.println("cm");
+  
+  
+  int lightvalue = analogRead(lightSensor);
+  Serial.println(lightvalue);
+  
+  //LDR AND DISTANCE 
+  if(lightvalue < 600 && distance < 30){
+  	digitalWrite(led , HIGH);
+    delay(200);
+  }
+  else if(lightvalue > 600 && distance < 30 ){
+    digitalWrite(led , LOW);
+    delay(200);
+  }
+  else{
+    digitalWrite(led , LOW);
+  
+  }
+  
+  
+  
+  
+  
+}

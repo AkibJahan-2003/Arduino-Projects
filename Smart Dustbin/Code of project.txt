@@ -1,0 +1,51 @@
+#include<Servo.h>
+int trig = 6;
+int echo = 7;
+int distance;
+long time ; 
+Servo servo1;
+void setup()
+{
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  servo1.attach(10);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  digitalWrite(trig , LOW);
+  delayMicroseconds(10);
+  digitalWrite(trig , HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig , LOW);
+  
+  time = pulseIn(echo , HIGH);
+  distance = time * 0.034/2;
+  
+  Serial.println("DISTANCE: ");
+  Serial.print(distance);
+  Serial.println("cm");
+  
+  
+  
+  if(distance < 10){
+  	servo1.write(90);
+    delay(10);
+  
+  }
+  else{
+  	servo1.write(0);
+  
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+}

@@ -1,0 +1,115 @@
+int trig = 13;
+int echo = 12;
+float temp = A2;
+int lightSensor = A3;
+int gasSensor = A1;
+int distance ;
+long time ; 
+int fanMotor = 2;
+int led = 5;
+int buzz = 6;
+void setup()
+{
+  pinMode(trig, OUTPUT);
+  pinMode(echo, INPUT);
+  pinMode(lightSensor, INPUT);
+  pinMode(gasSensor, INPUT);
+  pinMode(temp, INPUT);
+  pinMode(fanMotor , OUTPUT);
+  pinMode(buzz , OUTPUT);
+  pinMode(led , OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int lightvalue = analogRead(lightSensor);
+  Serial.println(lightvalue);
+  
+  //int gasvalue = analogRead(gasSensor);
+  //Serial.println(gasvalue);
+  
+  int tempvalue = analogRead(temp);
+  Serial.println(temp);
+  //Temperature Sensor Value
+  float c = tempvalue * (5.0/1023.0) * 100.0;
+    
+  Serial.println("Temperature: ");
+  Serial.print(c);
+  Serial.println(" C");  
+  
+  
+  
+  //Ultrasonic Sensor Value
+  digitalWrite(trig , LOW);
+  delayMicroseconds(10);
+  digitalWrite(trig , HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig , LOW);
+  
+  
+  time = pulseIn(echo , HIGH);
+  distance = time * 0.034/2;
+  
+  Serial.println("Distance: ");
+  Serial.print(distance);
+  Serial.println("cm");  
+  
+  
+  // Temperature
+  if(tempvalue < 40){
+  	digitalWrite(fanMotor , HIGH);
+    delay(10);
+  }
+  else if(tempvalue > 40 && tempvalue < 60){
+  	Serial.print("ALERT");
+  
+  }
+  else{
+  	digitalWrite(fanMotor, LOW);
+  }
+  
+  
+  //LDR AND DISTANCE 
+  if(lightvalue < 300 && distance < 15){
+  	digitalWrite(led , HIGH);
+    delay(200);
+    digitalWrite(led , LOW);
+    delay(200);
+  }
+  else if(lightvalue > 350 && distance < 10){
+  	digitalWrite(buzz , HIGH);
+    delay(200);
+    digitalWrite(buzz , LOW);
+    delay(200);
+    digitalWrite(led , HIGH);
+    delay(200);
+  }
+  else{
+  	digitalWrite(buzz , LOW);
+    digitalWrite(led , LOW);
+  
+  }
+  
+  //SMOKE SENSOR
+  if(tempvalue > 70){
+  	digitalWrite(gasSensor , HIGH);
+    delay(10);
+    digitalWrite(buzz , HIGH);
+    delay(100);
+    digitalWrite(buzz , LOW);
+    delay(100);
+    digitalWrite(led , HIGH);
+    delay(100);
+    digitalWrite(led , LOW);
+    delay(100); 
+  } 
+  else{
+  	digitalWrite(gasSensor , LOW);
+    digitalWrite(buzz , LOW);
+    digitalWrite(led , LOW);
+  }
+  
+  
+  
+}
